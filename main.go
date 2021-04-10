@@ -22,7 +22,8 @@ type Ping struct {
 }
 
 func main() {
-	println("DMDATA.JP API v2 WebSocket client (unofficial)")
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)
+	log.Println("DMDATA.JP API v2 WebSocket client (unofficial)")
 
 	apiKey := os.Getenv("DMDATA_JP_API_KEY")
 	outputDir := "./xml"
