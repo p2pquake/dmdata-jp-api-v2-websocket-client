@@ -9,24 +9,33 @@
 - Socket v2: パラメタは一部のみ対応
 - WebSocket v2: 非圧縮か gzip の XML 電文のみ対応
 
-## 実行例
+## 使用方法
+
+現在の実装では、地震・津波関連区分 (`telegram.earthquake`) を WebSocket 接続で受信します。実行可能なバイナリは [Releases](https://github.com/p2pquake/dmdata-jp-api-v2-websocket-client/releases) にあります。
+
+1. API キーを指定して実行すると、既存 WebSocket 接続を閉じた上で接続します
+1. 電文受信時は xml ディレクトリに出力します
+
+なお、電文出力時は`.xml.tmp` に書き出した上で `.xml` にアトミックにリネームします。そのため、 `.xml` ファイルはいつ読み取っても完全な状態です（書き込み途中の状態を読み取ることはありません）。
 
 ```sh
 $ mkdir xml
-$ DMDATA_JP_API_KEY=<API_KEY> go run main.go
-DMDATA.JP API v2 WebSocket client (unofficial)
-2021/04/03 21:40:15 GET https://api.dmdata.jp/v2/socket?status=open
-2021/04/03 21:40:15 POST https://api.dmdata.jp/v2/socket with dmdata.StartSocketRequest{Classifications:[]string{"telegram.earthquake"}, Types:[]string(nil), AppName:"P2PQuakeWSV2Client 0.1"}
-2021/04/03 21:40:15 connecting to wss://<VARIABLE>.api.dmdata.jp/v2/websocket?ticket=<TICKET>
-2021/04/03 21:40:15 connected.
-2021/04/03 21:40:15 recv: {"type":"start","socketId":<SOCKET_ID>,"classifications":["telegram.earthquake"],"types":null,"test":"no","formats":["xml","a/n","binary"],"appName":"P2PQuakeWSV2Client 0.1","time":"2021-04-03T12:40:15.471Z"}
-2021/04/03 21:40:35 recv: {"type":"ping","pingId":"FpKr"}
-2021/04/03 21:40:35 pong: dmdata.Ping{Type:"pong", PingId:"FpKr"}
+$ DMDATA_JP_API_KEY=<API_KEY> ./dmdata-jp-api-v2-websocket-client
+2021/04/05 00:03:46.685373 DMDATA.JP API v2 WebSocket client (unofficial)
+2021/04/05 00:03:46.685425 GET https://api.dmdata.jp/v2/socket?status=open
+2021/04/05 00:03:46.900731 POST https://api.dmdata.jp/v2/socket with dmdata.StartSocketRequest{Classifications:[]string{"telegram.earthquake"}, Types:[]string(nil), AppName:"P2PQuakeWSV2Client 0.1"}
+2021/04/05 00:03:46.924852 connecting to wss://<VARIABLE>.api.dmdata.jp/v2/websocket?ticket=<TICKET>
+2021/04/05 00:03:47.003456 connected.
+2021/04/05 00:03:47.264121 recv: {"type":"start","socketId":<SOCKET_ID>,"classifications":["telegram.earthquake"],"types":null,"test":"no","formats":["xml","a/n","binary"],"appName":"P2PQuakeWSV2Client 0.1","time":"2021-04-04T15:03:47.255Z"  }
+2021/04/05 00:04:07.620397 recv: {"type":"ping","pingId":"zmiL"}
+2021/04/05 00:04:07.620897 pong: dmdata.Ping{Type:"pong", PingId:"zmiL"}
+2021/04/05 02:21:44.001913 recv: {"type":"data","version":"2.0","id":"<ID>","classification":"telegram.earthquake", *snip*}
+2021/04/05 02:21:44.001913 recv: {"type":"data","version":"2.0","id":"<ID>","classification":"telegram.earthquake","head":{"type":"VXSE51", *snip*}, *snip*}
+2021/04/05 02:22:26.996647 recv: {"type":"data","version":"2.0","id":"<ID>","classification":"telegram.earthquake","head":{"type":"VXSE52", *snip*}, *snip*}
 
-$ ls xml/
-20210403220016_02906503_VXSE51.xml
-20210403220110_01161598_VXSE52.xml
-20210403220213_09189757_VXSE53.xml
+$ ls -l xml/
+-rw-r--r-- 1 user user  1817  4月  5 02:21 20210405022144_02967774_VXSE51.xml
+-rw-r--r-- 1 user user  1659  4月  5 02:22 20210405022226_06028089_VXSE52.xml
 ```
 
 ## 参考
