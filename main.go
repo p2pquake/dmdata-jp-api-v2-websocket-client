@@ -34,18 +34,6 @@ func main() {
 
 	c := dmdata.V2Client{ApiKey: apiKey}
 
-	lr, err := c.ListSocket("open")
-	if err != nil {
-		log.Fatalln("ListSocket error:", err)
-	}
-
-	for _, v := range lr.Items {
-		err = c.CloseSocket(v.Id)
-		if err != nil {
-			log.Fatalln("CloseSocket error:", err)
-		}
-	}
-
 	sr, err := c.StartSocket([]string{"telegram.earthquake"}, nil, "P2PQuakeWSV2Client 0.1")
 	if err != nil {
 		log.Fatalln("StartSocket error:", err)
