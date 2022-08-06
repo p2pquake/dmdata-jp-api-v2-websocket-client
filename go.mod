@@ -1,5 +1,5 @@
 module github.com/p2pquake/dmdata-jp-api-v2-websocket-client
 
-go 1.16
+go 1.19
 
-require github.com/gorilla/websocket v1.4.2
+require github.com/gorilla/websocket v1.5.0
