@@ -77,9 +77,13 @@ func (c *V2Client) StartSocket(classifications []string, types []string, appName
 }
 
 func (c *V2Client) CloseSocket(id int) error {
-	body, err := c.delete("https://api.dmdata.jp/v2/socket/" + strconv.Itoa(id))
+	status, body, err := c.delete("https://api.dmdata.jp/v2/socket/" + strconv.Itoa(id))
 	if err != nil {
 		return err
+	}
+
+	if status >= 200 && status <= 299 {
+		return nil
 	}
 
 	r := Response{}
@@ -125,23 +129,23 @@ func (c *V2Client) post(url string, v interface{}) ([]byte, error) {
 	return body, err
 }
 
-func (c *V2Client) delete(url string) ([]byte, error) {
+func (c *V2Client) delete(url string) (int, []byte, error) {
 	log.Printf("DELETE %s", url)
 
 	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodDelete, c.appendApiKey(url), nil)
 	if err != nil {
-		return nil, err
+		return -1, nil, err
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return -1, nil, err
 	}
 
 	defer res.Body.Close()
 	body, err := io.ReadAll(res.Body)
-	return body, err
+	return res.StatusCode, body, err
 }
 
 func (c *V2Client) parse(body []byte, v interface{}) error {
