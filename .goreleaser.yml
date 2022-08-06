@@ -10,6 +10,9 @@ builds:
       - amd64
     ldflags:
       - -s -w
+      - -X github.com/p2pquake/dmdata-jp-api-v2-websocket-client/cmd.Version={{.Version}}
+      - -X github.com/p2pquake/dmdata-jp-api-v2-websocket-client/cmd.Commit={{.Commit}}
+      - -X github.com/p2pquake/dmdata-jp-api-v2-websocket-client/cmd.Date={{.Date}}
 
 archives:
   - format: zip
