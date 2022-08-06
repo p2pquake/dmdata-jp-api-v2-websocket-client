@@ -23,6 +23,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:     "dmdata-jp-api-v2-websocket-client",
 	Short:   "DMDATA.JP (Project DM-D.S.S) API v2 の非公式クライアント実装",
+	Example: "DMDATA_JP_API_KEY=<API_KEY> ./dmdata-jp-api-v2-websocket-client -k -c telegram.earthquake -c eew.warning",
 	Version: fmt.Sprintf("%s (commit %s, built at %s)", Version, Commit, Date),
 	Run:     run,
 }

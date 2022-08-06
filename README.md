@@ -2,21 +2,52 @@
 
 [DMDATA.JP (Project DM-D.S.S)](https://dmdata.jp/) API v2 の非公式クライアント実装です。
 
-現在は、地震情報・津波予報を WebSocket で受信することに特化しています。
+現在は、 WebSocket での電文受信に特化しています。
 
 ## 対応 API
 
 - Socket v2: パラメタは一部のみ対応
 - WebSocket v2: 非圧縮か gzip の XML 電文のみ対応
 
+## ダウンロード
+
+実行可能なバイナリは [Releases](https://github.com/p2pquake/dmdata-jp-api-v2-websocket-client/releases) にあります。
+
 ## 使用方法
 
-現在の実装では、地震・津波関連区分 (`telegram.earthquake`) を WebSocket 接続で受信します。実行可能なバイナリは [Releases](https://github.com/p2pquake/dmdata-jp-api-v2-websocket-client/releases) にあります。
+### コマンド
 
-1. API キーを指定して実行すると、既存 WebSocket 接続を閉じた上で接続します
-1. 電文受信時は xml ディレクトリに出力します
+`--help` オプションで説明が確認できます。
+
+```sh
+$ ./dmdata-jp-api-v2-websocket-client --help
+DMDATA.JP (Project DM-D.S.S) API v2 の非公式クライアント実装
+
+Usage:
+  dmdata-jp-api-v2-websocket-client [flags]
+
+Examples:
+DMDATA_JP_API_KEY=<API_KEY> ./dmdata-jp-api-v2-websocket-client -k -c telegram.earthquake -c eew.warning
+
+Flags:
+  -c, --classifications strings     Retreive classifications (default [telegram.earthquake])
+  -h, --help                        help for dmdata-jp-api-v2-websocket-client
+  -k, --keep-existing-connections   Keep existing connections
+  -v, --version                     version for dmdata-jp-api-v2-websocket-client
+```
+
+オプション|説明
+--|--
+-c|[Socket Start v2](https://dmdata.jp/docs/reference/api/v2/socket.start) のリクエストパラメータ `classifications` の値（複数回指定可）。デフォルトは `telegram.earthquake` です。
+-k|既存の WebSocket 接続を切断しません。
+
+### 電文受信時の挙動
+
+電文は xml ディレクトリに出力します。
 
 なお、電文出力時は`.xml.tmp` に書き出した上で `.xml` にアトミックにリネームします。そのため、 `.xml` ファイルはいつ読み取っても完全な状態です（書き込み途中の状態を読み取ることはありません）。
+
+### 実行例
 
 ```sh
 $ mkdir xml
